@@ -14,6 +14,7 @@ from email.mime.text import MIMEText
 
 from config.services import PINBOARD_BASE_URL, SMTP
 from config.secrets import PINBOARD_USER, API_TOKEN, GMAIL
+from models.bookmark import Bookmark
 
 #
 # Main Commands
@@ -45,8 +46,10 @@ To send email:
 
 def interactive():
     pb = pinboard.Pinboard(API_TOKEN)
-    bookmarks = pb.posts.all()
-    print("Loaded %s bookmarks as bookmarks" % (len(bookmarks)))
+    #bookmarks = pb.posts.all()
+    #print("Loaded %s bookmarks as bookmarks" % (len(bookmarks)))
+    pinmark = pb.posts.get(url='https://covidactnow.org/')['posts'][0]
+    bookmark = Bookmark.create_from_pinboard(pinmark)
     pdb.set_trace()
 
 def mail_bookmarks(args):
