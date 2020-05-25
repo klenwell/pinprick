@@ -12,8 +12,8 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from config.services import PINBOARD_BASE_URL, PINBOARD_USER, SMTP
-from config.secrets import API_TOKEN, GMAIL
+from config.services import PINBOARD_BASE_URL, SMTP
+from config.secrets import PINBOARD_USER, API_TOKEN, GMAIL
 
 #
 # Main Commands

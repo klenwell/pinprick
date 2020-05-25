@@ -32,6 +32,8 @@ To get a token for you Pinboard account, see:
 
       cp -v config/secrets.py{-dist,}
 
+- Update config settings in `secrets.py` and `services.py`.
+
 
 ## Usage
 
