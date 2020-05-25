@@ -1,8 +1,6 @@
 """
 Email random bookmarks from a Pinboard Account.
 
-For more details, see https://trello.com/c/PLcop8eM.
-
 USAGE:
     python main.py usage
 """
@@ -41,7 +39,7 @@ To experiment with command line:
     python main.py interactive
 
 To send email:
-    python main.py mail tatwell@gmail.com
+    python main.py mail <user>@example.com
 """
     print(USAGE)
 
