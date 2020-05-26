@@ -5,15 +5,9 @@ This is based on Pinboard service.
 """
 from urllib.parse import urlparse
 
-from config.services import PINBOARD_BASE_URL
-from config.secrets import PINBOARD_USER
-
 
 class Bookmark:
-    def __init__(self, attrs=None):
-        if not attrs:
-            attrs = {}
-
+    def __init__(self, **attrs):
         self.url = attrs.get('url')
         self.title = attrs.get('title')
         self.description = attrs.get('description')
@@ -26,42 +20,48 @@ class Bookmark:
     def domain(self):
         if not self.url:
             return None
-
         return urlparse(self.url).netloc
 
     @staticmethod
-    def create_from_pinboard(pinboard, indexed_tags=None):
+    def create_from_pinboard_post(post, service):
         bookmark = Bookmark()
-        bookmark.service = pinboard
-        bookmark.url = pinboard.url
-        bookmark.title = pinboard.description
-        bookmark.description = pinboard.extended
-        bookmark.created_at = pinboard.time
-
-        if indexed_tags:
-            for tag_name in pinboard.tags:
-                self.tags.append(indexed_tags[tag_name])
-
-        bookmark.service_url = bookmark.generate_pinboard_service_url()
+        bookmark.service = service
+        bookmark.url = post.url
+        bookmark.title = post.description
+        bookmark.description = post.extended
+        bookmark.created_at = post.time
+        bookmark.tags = bookmark.collect_pinboard_tags(post.tags, service)
+        bookmark.service_url = bookmark.generate_pinboard_service_url(service)
         return bookmark
 
     #
     # Instance Methods
     #
-    def generate_pinboard_service_url(self):
+    def collect_pinboard_tags(self, tag_names, service):
+        pinboard_tags = []
+
+        if not service.tags_indexed_by_name:
+            return []
+
+        for tag_name in tag_names:
+            pinboard_tag = service.tags_indexed_by_name[tag_name]
+            pinboard_tags.append(pinboard_tag)
+
+        return pinboard_tags
+
+    def generate_pinboard_service_url(self, service):
         """Pinboard does not provide a URL or unique ID that can be used to generate a URL
-        even though they exist. For example: https://pinboard.in/u:tatwell/b:bd5e02362ae6
+        even though they exist. For example: https://pinboard.in/u:klenwell/b:bd5e02362ae6
 
-        So instead, we use the least frequent bookmark tag to generate a URL.
+        So instead, we use the tags to generate a URL like:
+        https://pinboard.in/u:klenwell/t:some_tag/t:another_tag
         """
-        tag_format = '{}/u:{}/t:{}'
+        service_url = '{}/u:{}'.format(service.base_url, service.user)
 
-        if not self.tags:
-            return None
+        for tag in self.tags:
+            service_url = '{}/t:{}'.format(service_url, tag.name)
 
-        sorted_tags = sorted(self.tags, key=lambda t: t.count)
-        least_used_tag = sorted_tags[0]
-        return tag_format.format(PINBOARD_BASE_URL, PINBOARD_USER, least_used_tag.name)
+        return service_url
 
     def __repr__(self):
         formatting = '<Bookmark title="{}" domain="{}" service_url="{}">'

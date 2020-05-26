@@ -12,9 +12,10 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-from config.services import PINBOARD_BASE_URL, SMTP
-from config.secrets import PINBOARD_USER, API_TOKEN, GMAIL
+from config.services import SMTP
+from config.secrets import PINBOARD_API_TOKEN, GMAIL
 from models.bookmark import Bookmark
+from services.bookmark_service import BookmarkService, BASE_SERVICE_URL as tmp_pinboard_url
 
 #
 # Main Commands
@@ -45,11 +46,8 @@ To send email:
     print(USAGE)
 
 def interactive():
-    pb = pinboard.Pinboard(API_TOKEN)
-    #bookmarks = pb.posts.all()
-    #print("Loaded %s bookmarks as bookmarks" % (len(bookmarks)))
-    pinmark = pb.posts.get(url='https://covidactnow.org/')['posts'][0]
-    bookmark = Bookmark.create_from_pinboard(pinmark)
+    bookmarks = BookmarkService.import_all()
+    print("Loaded %s bookmarks" % (len(bookmarks)))
     pdb.set_trace()
 
 def mail_bookmarks(args):
@@ -137,7 +135,8 @@ def format_bookmark(bookmark):
 
     def format_tag(tag):
         tag_format = '<a href="%s/u:%s/t:%s">%s (%s)</a>'
-        return tag_format % (PINBOARD_BASE_URL, PINBOARD_USER, tag.name, tag.name, tag.count)
+        user = PINBOARD_API_TOKEN.split(':')[0]
+        return tag_format % (tmp_pinboard_url, user, tag.name, tag.name, tag.count)
 
     def format_meta(bookmark):
         return '<span>%s</span> <span>TODO: permalink</span>' % (bookmark.time)
