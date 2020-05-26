@@ -63,6 +63,10 @@ class Bookmark:
 
         return service_url
 
+    def tag_to_url(self, tag):
+        tag_url_f = '{}/u:{}/t:{}'
+        return tag_url_f.format(self.service.base_url, self.service.user, tag.name)
+
     def __repr__(self):
         formatting = '<Bookmark title="{}" domain="{}" service_url="{}">'
         return formatting.format(self.title, self.domain, self.service_url)
