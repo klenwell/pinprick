@@ -12,6 +12,39 @@ from services.bookmark_service import BookmarkService
 from mailers.mailer import Mailer
 
 #
+# Actions
+#
+def usage():
+    USAGE = """
+USAGE
+
+To experiment with command line:
+    python main.py interactive
+
+To send email:
+    python main.py daily_mailer <user>@example.com
+"""
+    print(USAGE)
+
+def daily_mailer(args):
+    num_bookmarks = 5
+    subject = 'Daily Pinboard Bulletin'
+    recipient = args[1]
+
+    bookmarks = BookmarkService.import_all()
+    random_bookmarks = random.sample(bookmarks, num_bookmarks)
+
+    mailer = Mailer(random_bookmarks, subject=subject)
+    mailer.deliver_to(recipient)
+    print('Message delivered to {}'.format(recipient))
+
+def interactive():
+    bookmarks = BookmarkService.import_all()
+    print("Loaded %s bookmarks" % (len(bookmarks)))
+    pdb.set_trace()
+
+
+#
 # Main Commands
 #
 def main():
@@ -22,38 +55,10 @@ def main():
 
     if command == 'interactive':
         interactive()
-    elif command == 'mail':
-        mail_bookmarks(args)
+    elif command == 'daily_mailer':
+        daily_mailer(args)
     else:
         usage()
-
-def usage():
-    USAGE = """
-USAGE
-
-To experiment with command line:
-    python main.py interactive
-
-To send email:
-    python main.py mail <user>@example.com
-"""
-    print(USAGE)
-
-def interactive():
-    bookmarks = BookmarkService.import_all()
-    print("Loaded %s bookmarks" % (len(bookmarks)))
-    pdb.set_trace()
-
-def mail_bookmarks(args):
-    NUM_BOOKMARKS = 5
-    recipient = args[1]
-
-    bookmarks = BookmarkService.import_all()
-    random_bookmarks = random.sample(bookmarks, NUM_BOOKMARKS)
-
-    mailer = Mailer(random_bookmarks)
-    mailer.deliver_to(recipient)
-    print('Message delivered to {}'.format(recipient))
 
 #
 # Main
