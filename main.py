@@ -26,12 +26,27 @@ To send email:
 """
     print(USAGE)
 
+# Usage: python main.py daily_mailer <email>
 def daily_mailer(args):
     num_bookmarks = 5
-    subject = 'Daily Pinboard Bulletin'
+    subject = 'Pinprick Daily Mailer'
     recipient = args[1]
 
     bookmarks = BookmarkService.import_all()
+    random_bookmarks = random.sample(bookmarks, num_bookmarks)
+
+    mailer = Mailer(random_bookmarks, subject=subject)
+    mailer.deliver_to(recipient)
+    print('Message delivered to {}'.format(recipient))
+
+# Usage: python main.py music_mailer <email>
+def music_mailer(args):
+    tags = ['music', 'youtube']
+    num_bookmarks = 3
+    subject = 'Pinprick Music Mailer'
+    recipient = args[1]
+
+    bookmarks = BookmarkService.import_by_tags(tags)
     random_bookmarks = random.sample(bookmarks, num_bookmarks)
 
     mailer = Mailer(random_bookmarks, subject=subject)
@@ -58,6 +73,8 @@ def main():
         interactive()
     elif command == 'daily_mailer':
         daily_mailer(args)
+    elif command == 'music_mailer':
+        music_mailer(args)
     else:
         usage()
 
