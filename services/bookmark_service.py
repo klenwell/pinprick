@@ -46,11 +46,24 @@ class BookmarkService:
 
         return bookmarks
 
+    @staticmethod
+    def import_by_tags(tags):
+        bookmarks = []
+
+        service = BookmarkService()
+        posts = service.import_posts_by_tags(tags)
+
+        for post in posts:
+            bookmark = Bookmark.create_from_pinboard_post(post, service)
+            bookmarks.append(bookmark)
+
+        return bookmarks
+
     #
     # Instance Methods
     #
     def import_all_posts(self):
         return self.api.posts.all()
 
-    def import_selected_posts(self):
-        pass
+    def import_posts_by_tags(self, tags):
+        return self.api.posts.all(tag=tags)

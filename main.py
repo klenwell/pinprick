@@ -39,7 +39,8 @@ def daily_mailer(args):
     print('Message delivered to {}'.format(recipient))
 
 def interactive():
-    bookmarks = BookmarkService.import_all()
+    tags = ['music', 'youtube']
+    bookmarks = BookmarkService.import_by_tags(tags)
     print("Loaded %s bookmarks" % (len(bookmarks)))
     pdb.set_trace()
 
