@@ -4,12 +4,12 @@ Email random bookmarks from a Pinboard Account.
 USAGE:
     python main.py usage
 """
-import sys, pdb
+import sys
 import random
 
-from models.bookmark import Bookmark
 from services.bookmark_service import BookmarkService
 from mailers.mailer import Mailer
+
 
 #
 # Actions
@@ -26,6 +26,7 @@ To send email:
 """
     print(USAGE)
 
+
 # Usage: python main.py daily_mailer <email>
 def daily_mailer(args):
     num_bookmarks = 5
@@ -38,6 +39,7 @@ def daily_mailer(args):
     mailer = Mailer(random_bookmarks, subject=subject)
     mailer.deliver_to(recipient)
     print('Message delivered to {}'.format(recipient))
+
 
 # Usage: python main.py music_mailer <email>
 def music_mailer(args):
@@ -53,17 +55,18 @@ def music_mailer(args):
     mailer.deliver_to(recipient)
     print('Message delivered to {}'.format(recipient))
 
+
 def interactive():
     tags = ['music', 'youtube']
     bookmarks = BookmarkService.import_by_tags(tags)
     print("Loaded %s bookmarks" % (len(bookmarks)))
-    pdb.set_trace()
+    breakpoint()
 
 
 #
-# Main Commands
+# Controller
 #
-def main():
+def controller():
     args = sys.argv[1:]
     command = args[0] if args else None
 
@@ -78,8 +81,9 @@ def main():
     else:
         usage()
 
+
 #
 # Main
 #
 if __name__ == '__main__':
-    main()
+    controller()

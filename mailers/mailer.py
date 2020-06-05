@@ -32,7 +32,7 @@ class Mailer:
 
             # Log in and send email.
             smtp.login(self.smtp_address, self.smtp_pass)
-            response = smtp.send_message(message)
+            smtp.send_message(message)
 
         return message
 
