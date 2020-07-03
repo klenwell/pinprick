@@ -23,8 +23,16 @@ class BookmarkService:
         self.base_url = BASE_SERVICE_URL
 
     @cached_property
+    def posts(self):
+        return self.api.posts.all()
+
+    @cached_property
     def tags(self):
         return self.api.tags.get()
+
+    @cached_property
+    def bookmarks(self):
+        return self.import_all()
 
     @cached_property
     def tags_indexed_by_name(self):
@@ -38,9 +46,8 @@ class BookmarkService:
         bookmarks = []
 
         service = BookmarkService()
-        posts = service.import_all_posts()
 
-        for post in posts:
+        for post in service.posts:
             bookmark = Bookmark.create_from_pinboard_post(post, service)
             bookmarks.append(bookmark)
 

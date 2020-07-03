@@ -56,10 +56,14 @@ def music_mailer(args):
     print('Message delivered to {}'.format(recipient))
 
 
+# Usage: python main.py interactive
 def interactive():
-    tags = ['music', 'youtube']
-    bookmarks = BookmarkService.import_by_tags(tags)
-    print("Loaded %s bookmarks" % (len(bookmarks)))
+    from datetime import date
+    today = date.today()
+    pinboard = BookmarkService()
+    created_today = [b for b in pinboard.bookmarks if b.is_created_this_day(today.month, today.day)]
+
+    print("Loaded %s bookmarks" % (len(created_today)))
     breakpoint()
 
 

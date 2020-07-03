@@ -22,6 +22,10 @@ class Bookmark:
             return None
         return urlparse(self.url).netloc
 
+    @property
+    def created_on(self):
+        return self.created_at.date()
+
     @staticmethod
     def create_from_pinboard_post(post, service):
         bookmark = Bookmark()
@@ -66,6 +70,9 @@ class Bookmark:
     def tag_to_url(self, tag):
         tag_url_f = '{}/u:{}/t:{}'
         return tag_url_f.format(self.service.base_url, self.service.user, tag.name)
+
+    def is_created_this_day(self, month, day):
+        return self.created_on.month == month and self.created_on.day == day
 
     def __repr__(self):
         formatting = '<Bookmark title="{}" domain="{}" service_url="{}">'
