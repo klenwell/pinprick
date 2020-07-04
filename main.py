@@ -55,13 +55,8 @@ def music_mailer(args):
 
 # Usage: python main.py interactive
 def interactive():
-    from services.bookmark_service import distributed_sample, by_created_on_day
-
-    selected_bookmarks = distributed_sample(5)
-    print(selected_bookmarks)
-
-    print(by_created_on_day(12, 6))
-    breakpoint()
+    pinboard = BookmarkService()
+    print(len(pinboard.bookmarks))
 
 
 #
