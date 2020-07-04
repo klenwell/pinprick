@@ -58,15 +58,11 @@ def music_mailer(args):
 
 # Usage: python main.py interactive
 def interactive():
-    from datetime import date
-    from services.bookmark_lottery_service import shard_list, choose_randomly_distributed_bookmarks
+    from datetime import date, timedelta
+    from services.bookmark_service import shard_list, distributed_sample, by_created_on_day
 
-    today = date.today()
     pinboard = BookmarkService()
     bookmarks = pinboard.bookmarks
-
-    created_today = [b for b in pinboard.bookmarks if b.is_created_this_day(today.month, today.day)]
-    print("Loaded %s bookmarks" % (len(created_today)))
 
     year_counts = {}
     for bookmark in bookmarks:
@@ -79,9 +75,23 @@ def interactive():
     shard_bounds = [(shard[0].created_at, shard[-1].created_at) for shard in bookmark_shards]
     print(shard_bounds)
 
-    selected_bookmarks = choose_randomly_distributed_bookmarks(5)
+    selected_bookmarks = distributed_sample(5)
     print([b.created_at.year for b in selected_bookmarks])
 
+    bookmarks_by_day = {}
+    start_date = date(2004, 1, 1)
+    for day_num in range(366):
+        this_days_bookmarks = []
+        dated = start_date + timedelta(days=day_num)
+
+        for bookmark in pinboard.bookmarks:
+            if bookmark.is_created_this_day(dated.month, dated.day):
+                this_days_bookmarks.append(bookmark)
+
+        bookmarks_by_day[(dated.month, dated.day)] = len(this_days_bookmarks)
+    print(bookmarks_by_day)
+
+    print(by_created_on_day(12, 6))
     breakpoint()
 
 

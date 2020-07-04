@@ -17,6 +17,24 @@ class Bookmark:
         self.created_at = attrs.get('created_at')
         self.tags = attrs.get('tags', [])
 
+    #
+    # Static Methods
+    #
+    @staticmethod
+    def create_from_pinboard_post(post, service):
+        bookmark = Bookmark()
+        bookmark.service = service
+        bookmark.url = post.url
+        bookmark.title = post.description
+        bookmark.description = post.extended
+        bookmark.created_at = post.time
+        bookmark.tags = bookmark.collect_pinboard_tags(post.tags, service)
+        bookmark.service_url = bookmark.generate_pinboard_service_url(service)
+        return bookmark
+
+    #
+    # Properties
+    #
     @property
     def domain(self):
         if not self.url:
@@ -35,21 +53,13 @@ class Bookmark:
     def year(self):
         return self.created_at.year
 
-    @staticmethod
-    def create_from_pinboard_post(post, service):
-        bookmark = Bookmark()
-        bookmark.service = service
-        bookmark.url = post.url
-        bookmark.title = post.description
-        bookmark.description = post.extended
-        bookmark.created_at = post.time
-        bookmark.tags = bookmark.collect_pinboard_tags(post.tags, service)
-        bookmark.service_url = bookmark.generate_pinboard_service_url(service)
-        return bookmark
-
     #
     # Instance Methods
     #
+    def is_created_this_day(self, month, day):
+        return self.created_on.month == month and self.created_on.day == day
+
+    # Private
     def collect_pinboard_tags(self, tag_names, service):
         pinboard_tags = []
 
@@ -80,9 +90,6 @@ class Bookmark:
         tag_url_f = '{}/u:{}/t:{}'
         return tag_url_f.format(self.service.base_url, self.service.user, tag.name)
 
-    def is_created_this_day(self, month, day):
-        return self.created_on.month == month and self.created_on.day == day
-
     def __repr__(self):
-        formatting = '<Bookmark title="{}" domain="{}" service_url="{}">'
-        return formatting.format(self.title, self.domain, self.service_url)
+        formatting = '<Bookmark title="{}" domain="{}" service_url={} created_on={}>'
+        return formatting.format(self.title, self.domain, self.service_url, self.created_on)
