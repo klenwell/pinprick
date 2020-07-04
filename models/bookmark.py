@@ -4,6 +4,7 @@ Bookmark Model
 This is based on Pinboard service.
 """
 from urllib.parse import urlparse
+from datetime import date
 
 
 class Bookmark:
@@ -25,6 +26,14 @@ class Bookmark:
     @property
     def created_on(self):
         return self.created_at.date()
+
+    @property
+    def days_old(self):
+        return (date.today() - self.created_on).days
+
+    @property
+    def year(self):
+        return self.created_at.year
 
     @staticmethod
     def create_from_pinboard_post(post, service):

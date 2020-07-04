@@ -22,36 +22,13 @@ class BookmarkService:
         self.user = PINBOARD_API_TOKEN.split(':')[0]
         self.base_url = BASE_SERVICE_URL
 
-    @cached_property
-    def posts(self):
-        return self.api.posts.all()
-
-    @cached_property
-    def tags(self):
-        return self.api.tags.get()
-
-    @cached_property
-    def bookmarks(self):
-        return self.import_all()
-
-    @cached_property
-    def tags_indexed_by_name(self):
-        index = {}
-        for tag in self.tags:
-            index[tag.name] = tag
-        return index
-
+    #
+    # Static Methods
+    #
     @staticmethod
     def import_all():
-        bookmarks = []
-
         service = BookmarkService()
-
-        for post in service.posts:
-            bookmark = Bookmark.create_from_pinboard_post(post, service)
-            bookmarks.append(bookmark)
-
-        return bookmarks
+        return service.bookmarks
 
     @staticmethod
     def import_by_tags(tags):
@@ -65,6 +42,36 @@ class BookmarkService:
             bookmarks.append(bookmark)
 
         return bookmarks
+
+    #
+    # Properties
+    #
+    @cached_property
+    def posts(self):
+        return self.api.posts.all()
+
+    @cached_property
+    def tags(self):
+        return self.api.tags.get()
+
+    @cached_property
+    def bookmarks(self):
+        bookmarks = []
+
+        service = BookmarkService()
+
+        for post in self.posts:
+            bookmark = Bookmark.create_from_pinboard_post(post, service)
+            bookmarks.append(bookmark)
+
+        return bookmarks
+
+    @cached_property
+    def tags_indexed_by_name(self):
+        index = {}
+        for tag in self.tags:
+            index[tag.name] = tag
+        return index
 
     #
     # Instance Methods
