@@ -3,18 +3,18 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 from config.secrets import GMAIL
-from mailers.helpers import format_bookmark
 
 
 SMTP_HOST = 'smtp.gmail.com'
 SMTP_PORT = 587
-DEFAULT_SUBJECT = 'Daily Pinboard Bulletin'
+DEFAULT_SUBJECT = 'Pinprick Bulletin'
 
 
 class Mailer:
-    def __init__(self, bookmarks, **keywords):
-        self.bookmarks = bookmarks
+    def __init__(self, **keywords):
         self.subject = keywords.get('subject', DEFAULT_SUBJECT)
+        self.body = keywords.get('body', '(No body)')
+
         self.from_name = 'Pinprick Bot'
         self.smtp_address = GMAIL['address']
         self.smtp_pass = GMAIL['password']
@@ -42,16 +42,5 @@ class Mailer:
         message['To'] = recipient
         message['Subject'] = self.subject
 
-        html_body = self.format_html_body(self.bookmarks)
-        message.attach(MIMEText(html_body, 'html'))
+        message.attach(MIMEText(self.body, 'html'))
         return message
-
-    def format_html_body(self, bookmarks):
-        email_f = """
-<h3>{} Bookmarks</h3>
-
-{}
-"""
-        bookmark_blocks = [format_bookmark(bookmark) for bookmark in bookmarks]
-        bookmark_block = "\n".join(bookmark_blocks)
-        return email_f.format(len(bookmarks), bookmark_block)

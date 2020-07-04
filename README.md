@@ -37,20 +37,22 @@ To get a token for you Pinboard account, see:
 
 ## Usage
 
-To test the API interactively:
+To test interactively:
 
 ```
 $ python main.py interactive
 Command: interactive / Arguments: ['interactive']
-Loaded 1568 bookmarks as bookmarks
 --Return--
-> pinprick/main.py(52)interactive()->None
--> pdb.set_trace()
-(Pdb) bookmark = bookmarks[0]
-(Pdb) bookmark
-<Bookmark description="Ask HN: I just got my first team lead. What should I do? | Hacker News" url="news.ycombinator.com">
-(Pdb) bookmark.url
-'https://news.ycombinator.com/item?id=3407643'
-(Pdb) bookmark.__dict__
-{'description': 'Ask HN: I just got my first team lead. What should I do? | Hacker News', 'extended': '', 'url': 'https://news.ycombinator.com/item?id=3407643', ... }
+-> breakpoint()
+(Pdb) pinboard = BookmarkService()
+(Pdb) len(pinboard.bookmarks)
+1635
+```
+
+Send the daily mailer:
+
+```
+$ python main.py daily_mailer klenwell@gmail.com
+Command: daily_mailer / Arguments: ['daily_mailer', 'klenwell@gmail.com']
+Message delivered to klenwell@gmail.com
 ```

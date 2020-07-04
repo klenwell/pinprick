@@ -8,6 +8,7 @@ import sys
 import random
 
 from services.bookmark_service import BookmarkService
+from mailers.daily_mailer import DailyMailer
 from mailers.mailer import Mailer
 
 
@@ -29,16 +30,12 @@ To send email:
 
 # Usage: python main.py daily_mailer <email>
 def daily_mailer(args):
-    num_bookmarks = 5
-    subject = 'Pinprick Daily Mailer'
     recipient = args[1]
 
-    bookmarks = BookmarkService.import_all()
-    random_bookmarks = random.sample(bookmarks, num_bookmarks)
-
-    mailer = Mailer(random_bookmarks, subject=subject)
+    mailer = DailyMailer()
     mailer.deliver_to(recipient)
     print('Message delivered to {}'.format(recipient))
+    return "Done"
 
 
 # Usage: python main.py music_mailer <email>
@@ -56,11 +53,10 @@ def music_mailer(args):
     print('Message delivered to {}'.format(recipient))
 
 
+# Usage: python main.py interactive
 def interactive():
-    tags = ['music', 'youtube']
-    bookmarks = BookmarkService.import_by_tags(tags)
-    print("Loaded %s bookmarks" % (len(bookmarks)))
-    breakpoint()
+    pinboard = BookmarkService()
+    print(len(pinboard.bookmarks))
 
 
 #

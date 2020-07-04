@@ -4,6 +4,7 @@ Bookmark Model
 This is based on Pinboard service.
 """
 from urllib.parse import urlparse
+from datetime import date
 
 
 class Bookmark:
@@ -16,12 +17,9 @@ class Bookmark:
         self.created_at = attrs.get('created_at')
         self.tags = attrs.get('tags', [])
 
-    @property
-    def domain(self):
-        if not self.url:
-            return None
-        return urlparse(self.url).netloc
-
+    #
+    # Static Methods
+    #
     @staticmethod
     def create_from_pinboard_post(post, service):
         bookmark = Bookmark()
@@ -35,8 +33,33 @@ class Bookmark:
         return bookmark
 
     #
+    # Properties
+    #
+    @property
+    def domain(self):
+        if not self.url:
+            return None
+        return urlparse(self.url).netloc
+
+    @property
+    def created_on(self):
+        return self.created_at.date()
+
+    @property
+    def days_old(self):
+        return (date.today() - self.created_on).days
+
+    @property
+    def year(self):
+        return self.created_at.year
+
+    #
     # Instance Methods
     #
+    def is_created_this_day(self, month, day):
+        return self.created_on.month == month and self.created_on.day == day
+
+    # Private
     def collect_pinboard_tags(self, tag_names, service):
         pinboard_tags = []
 
@@ -68,5 +91,5 @@ class Bookmark:
         return tag_url_f.format(self.service.base_url, self.service.user, tag.name)
 
     def __repr__(self):
-        formatting = '<Bookmark title="{}" domain="{}" service_url="{}">'
-        return formatting.format(self.title, self.domain, self.service_url)
+        formatting = '<Bookmark title="{}" domain="{}" service_url={} created_on={}>'
+        return formatting.format(self.title, self.domain, self.service_url, self.created_on)

@@ -1,3 +1,17 @@
+def format_bookmark_section(title, bookmarks):
+    html_f = """\
+<div class="section" style="margin-bottom:8px">
+  <h3>{} ({})</h3>
+  {}
+</div>
+"""
+
+    bookmark_divs = [format_bookmark(bookmark) for bookmark in bookmarks]
+    bookmark_list = "\n".join(bookmark_divs)
+
+    return html_f.format(title, len(bookmarks), bookmark_list)
+
+
 def format_bookmark(bookmark):
     bookmark_f = """\
 <div class="bookmark" style="margin-bottom:4px">
