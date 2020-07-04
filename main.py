@@ -64,32 +64,8 @@ def interactive():
     pinboard = BookmarkService()
     bookmarks = pinboard.bookmarks
 
-    year_counts = {}
-    for bookmark in bookmarks:
-        year = bookmark.created_at.year
-        count = year_counts.get(year, 0)
-        year_counts[year] = count + 1
-    print(year_counts)
-
-    bookmark_shards = shard_list(bookmarks, 5)
-    shard_bounds = [(shard[0].created_at, shard[-1].created_at) for shard in bookmark_shards]
-    print(shard_bounds)
-
     selected_bookmarks = distributed_sample(5)
-    print([b.created_at.year for b in selected_bookmarks])
-
-    bookmarks_by_day = {}
-    start_date = date(2004, 1, 1)
-    for day_num in range(366):
-        this_days_bookmarks = []
-        dated = start_date + timedelta(days=day_num)
-
-        for bookmark in pinboard.bookmarks:
-            if bookmark.is_created_this_day(dated.month, dated.day):
-                this_days_bookmarks.append(bookmark)
-
-        bookmarks_by_day[(dated.month, dated.day)] = len(this_days_bookmarks)
-    print(bookmarks_by_day)
+    print(selected_bookmarks)
 
     print(by_created_on_day(12, 6))
     breakpoint()
