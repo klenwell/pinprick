@@ -1,1 +1,7 @@
 pinboard>=2.0
+
+# For email delivery using Gmail API
+# https://developers.google.com/gmail/api/quickstart/python#step_1_install_the_google_client_library
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
