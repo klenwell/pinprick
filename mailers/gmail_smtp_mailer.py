@@ -1,3 +1,11 @@
+"""
+**Google has deprecated and will soon disable this method.**
+
+More info here: https://support.google.com/accounts/answer/6010255
+
+For mailing, use the new GmailApiMailer class. This class has been kept only to serve
+as a reference.
+"""
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -10,7 +18,7 @@ SMTP_PORT = 587
 DEFAULT_SUBJECT = 'Pinprick Bulletin'
 
 
-class Mailer:
+class GmailSmtpMailer:
     def __init__(self, **keywords):
         self.subject = keywords.get('subject', DEFAULT_SUBJECT)
         self.body = keywords.get('body', '(No body)')

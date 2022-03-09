@@ -9,7 +9,6 @@ import random
 
 from services.bookmark_service import BookmarkService
 from mailers.daily_mailer import DailyMailer
-from mailers.mailer import Mailer
 from mailers.gmail_api_mailer import GmailApiMailer
 
 
@@ -49,7 +48,7 @@ def music_mailer(args):
     bookmarks = BookmarkService.import_by_tags(tags)
     random_bookmarks = random.sample(bookmarks, num_bookmarks)
 
-    mailer = Mailer(random_bookmarks, subject=subject)
+    mailer = GmailApiMailer(random_bookmarks, subject=subject)
     mailer.deliver_to(recipient)
     print('Message delivered to {}'.format(recipient))
 
