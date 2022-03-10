@@ -9,7 +9,7 @@ import random
 
 from services.bookmark_service import BookmarkService
 from mailers.daily_mailer import DailyMailer
-from mailers.mailer import Mailer
+from mailers.gmail_api_mailer import GmailApiMailer
 
 
 #
@@ -48,15 +48,27 @@ def music_mailer(args):
     bookmarks = BookmarkService.import_by_tags(tags)
     random_bookmarks = random.sample(bookmarks, num_bookmarks)
 
-    mailer = Mailer(random_bookmarks, subject=subject)
+    mailer = GmailApiMailer(random_bookmarks, subject=subject)
     mailer.deliver_to(recipient)
     print('Message delivered to {}'.format(recipient))
 
 
 # Usage: python main.py interactive
 def interactive():
-    pinboard = BookmarkService()
-    print(len(pinboard.bookmarks))
+    # pinboard = BookmarkService()
+    # print(len(pinboard.bookmarks))
+    from datetime import datetime
+    from config.secrets import GMAIL
+
+    recipient = '{}@gmail.com'.format(GMAIL['address'])
+    subject = 'Test Email Using Gmail API'
+    body = 'This is a test of the Gmail API using OAuth at {}'.format(datetime.now())
+
+    mailer = GmailApiMailer(subject=subject, body=body)
+    message = mailer.deliver_to(recipient)
+    print('Message Id: {} sent to {}'.format(message['id'], recipient))
+
+    breakpoint()
 
 
 #
