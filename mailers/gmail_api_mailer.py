@@ -24,6 +24,8 @@ class GmailApiMailer:
         # The file token.json stores the user's access and refresh tokens, and is
         # created automatically when the authorization flow completes for the first
         # time.
+        creds = None
+
         if os.path.exists(TOKEN_FILE):
             creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
 
@@ -58,7 +60,6 @@ class GmailApiMailer:
     def __init__(self, **keywords):
         self.subject = keywords.get('subject', DEFAULT_SUBJECT)
         self.body = keywords.get('body', '(No body)')
-        self.from_name = 'Pinprick Bot'
 
     def deliver_to(self, recipient):
         user_id = 'me'
