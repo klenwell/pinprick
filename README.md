@@ -36,24 +36,12 @@ To get a token for you Pinboard account, see:
 
 
 ## Mailer
-Email is supported using the Gmail API. To set up API credentials and create a token, follow these steps:
-
-- Log into your Gmail account.
-- Create new cloud project: https://console.cloud.google.com/projectcreate
-- Create credentials: https://console.cloud.google.com/apis/credentials
-- Select OAuth Client: [console.cloud.google.com](https://console.cloud.google.com/apis/credentials/oauthclient)
-- Create OAuth Consent Screen: https://console.cloud.google.com/apis/credentials/consent > External
-  - Only external is available to non-workspace users.
-- Create Client:
-  - Type: Desktop App
-- Download JSON file and save to `config` folder as `gmail-api-credential.json`.
-- Enable Service: https://console.developers.google.com/apis/api/gmail.googleapis.com/overview
-
-The first time you run the script, you'll get a link in console to authorize use of your account.
-
-You may also still be able to use the Gmail SMTP mailer if you create an app password:
+Email is supported using the Gmail SMTP with an app password. To set up an app password for your
+Gmail account, see:
 
 - https://support.google.com/accounts/answer/185833
+
+Then update `secrets.py` as detailed above.
 
 
 ## Usage
