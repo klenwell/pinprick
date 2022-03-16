@@ -1,11 +1,11 @@
 from datetime import date
 
-from mailers.gmail_api_mailer import GmailApiMailer
+from mailers.gmail_smtp_mailer import GmailSmtpMailer
 from mailers.helpers import format_bookmark_section
 from services.bookmark_service import distributed_sample, by_created_on_day
 
 
-class DailyMailer(GmailApiMailer):
+class DailyMailer(GmailSmtpMailer):
     def __init__(self):
         subject = 'Pinprick Daily Mailer'
         body = self.compose_body()
