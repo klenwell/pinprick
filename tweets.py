@@ -31,7 +31,7 @@ def daily_mailer(args):
 
 # Usage: python tweets.py interactive
 def interactive():
-    test_twint()
+    raise("Waiting for Twitter API access approval.")
 
 
 def test_twint():

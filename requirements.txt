@@ -13,11 +13,3 @@ google-auth-oauthlib
 
 # Twitter API: https://github.com/tweepy/tweepy
 tweepy
-
-# Twitter Scaper: https://github.com/twintproject/twint
-# This includes pandas and numpy which take several minutes to install.
-# Needed to manually run:
-# $ pip install --upgrade git+https://github.com/twintproject/twint.git@origin/master#egg=twint
-# This got tweets working but not favorites.
-twint
-urllib3<2,>=1.26.2
