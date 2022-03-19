@@ -13,3 +13,8 @@ google-auth-oauthlib
 
 # Twitter API: https://github.com/tweepy/tweepy
 tweepy
+
+# Twitter Scaper: https://github.com/twintproject/twint
+# This includes pandas and numpy which take several minutes to install.
+twint
+urllib3<2,>=1.26.2
