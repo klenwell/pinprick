@@ -31,7 +31,48 @@ def daily_mailer(args):
 
 # Usage: python tweets.py interactive
 def interactive():
-    raise("Waiting for Twitter API access approval.")
+    test_bearer_token()
+
+
+def test_bearer_token():
+    import tweepy
+    from config.secrets import TWITTER
+
+    auth = tweepy.OAuth2BearerHandler(TWITTER['bearer-token'])
+    api = tweepy.API(auth)
+
+    cursor_params = {
+        'id': 'klenwell',
+        'wait_on_rate_limit': False,
+        'tweet_mode': 'extended',
+        'count': 200
+    }
+
+    pages = 0
+    max_page = 3
+    faves = []
+
+    # https://stackoverflow.com/q/39840571/1093087
+    for page in tweepy.Cursor(api.get_favorites, **cursor_params).pages(max_page):
+        pages += 1
+        for fave in page:
+            faves.append(fave)
+
+    indexed = {}
+    for fave in faves:
+        key = (fave.created_at.month, fave.created_at.day)
+        if indexed.get(key):
+            indexed[key].append(fave)
+        else:
+            indexed[key] = [fave]
+
+    date_count = [(d, len(indexed[d])) for d in indexed.keys()]
+
+    print(pages, len(faves), sorted(date_count))
+
+    tweet = faves[100]
+    print(tweet._json)
+    breakpoint()
 
 
 def test_twint():
@@ -65,6 +106,8 @@ def test_api():
     # public_tweets = api.home_timeline()
     # breakpoint()
     # return
+
+
 
     # Collect my favorites
     auth = tweepy.OAuth1UserHandler(
