@@ -6,7 +6,6 @@ USAGE:
 """
 import sys
 import random
-from datetime import date
 
 from services.tweet_service import TweetService
 from mailers.daily_tweet_mailer import DailyTweetMailer
@@ -35,7 +34,7 @@ def daily_mailer(args):
     mailer.deliver_to(recipient)
     print('Daily tweet mailer delivered to {}'.format(recipient))
     return "Done"
-    
+
 
 # Usage: python tweets.py interactive
 def interactive():
@@ -59,23 +58,6 @@ def test_bearer_token():
 
     tweet = faves[random.randint(0, len(faves)-1)]
     print(tweet._json)
-    breakpoint()
-
-
-def test_twint():
-    import twint
-
-    # Configure
-    c = twint.Config()
-    c.Username = "klenwell"
-    c.Store_object = True
-
-    # Run
-    twint.run.Favorites(c)
-    faves = twint.output.tweets_list
-    print(len(faves))
-    print(faves[0], faves[-1])
-
     breakpoint()
 
 

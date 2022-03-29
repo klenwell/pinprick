@@ -8,7 +8,6 @@ https://developer.twitter.com/
 from functools import cached_property
 import tweepy
 import random
-from math import ceil
 
 from config.secrets import TWITTER
 from services.bookmark_service import shard_list
@@ -76,7 +75,6 @@ class TweetService:
         """
         sharded_faves = []
 
-        api = TweetService()
         faves = sorted(self.favorites, key=lambda f: f.created_at)
         fave_pools = shard_list(faves, count)
 

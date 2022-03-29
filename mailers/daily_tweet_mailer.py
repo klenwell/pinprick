@@ -1,9 +1,7 @@
 from datetime import date
 
 from mailers.gmail_smtp_mailer import GmailSmtpMailer
-from mailers.helpers import format_bookmark_section
 from services.tweet_service import TweetService
-from services.bookmark_service import distributed_sample, by_created_on_day
 
 
 class DailyTweetMailer(GmailSmtpMailer):
