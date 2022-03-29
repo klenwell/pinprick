@@ -11,6 +11,7 @@ import random
 from math import ceil
 
 from config.secrets import TWITTER
+from services.bookmark_service import shard_list
 
 
 #
@@ -63,3 +64,26 @@ class TweetService:
         self.wait_on_rate_limit = 'wait_on_rate_limit'
         self.count_per_page = 200
         self.max_page = 100
+
+    def faves_by_date(self, dated):
+        faves = []
+        for fave in self.favorites:
+            if fave.created_at.month == dated.month and fave.created_at.day == dated.day:
+                faves.append(fave)
+        return faves
+
+    def faves_sharded_sample(self, count):
+        """For given count, will break faves into groups evenly divided by and
+        return one random fave from each group.
+        """
+        sharded_faves = []
+
+        api = TweetService()
+        faves = sorted(self.favorites, key=lambda f: f.created_at)
+        fave_pools = shard_list(faves, count)
+
+        for fave_pool in fave_pools:
+            fave = random.choice(fave_pool)
+            sharded_faves.append(fave)
+
+        return sharded_faves

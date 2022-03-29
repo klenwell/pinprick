@@ -6,6 +6,7 @@ USAGE:
 """
 import sys
 import random
+from datetime import date
 
 from services.tweet_service import TweetService
 
@@ -26,9 +27,16 @@ To send email:
     print(USAGE)
 
 
-# Usage: python tweets.py favorites <user>@example.com
+# Usage: python tweets.py daily_mailer <user>@example.com
 def daily_mailer(args):
-    pass
+    dated = date.today()
+
+    api = TweetService()
+    daily_faves = api.faves_by_date(dated)
+    random_faves = api.faves_sharded_sample(5)
+    print([(f.created_at, f.full_text) for f in random_faves])
+
+    breakpoint()
 
 
 # Usage: python tweets.py interactive
