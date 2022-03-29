@@ -38,8 +38,7 @@ class TweetService:
         pages = 0
 
         cursor_params = {
-            'id': self.user,
-            'wait_on_rate_limit': self.wait_on_rate_limit,
+            'screen_name': self.user,
             'tweet_mode': self.tweet_mode,
             'count': self.count_per_page
         }
@@ -61,7 +60,6 @@ class TweetService:
         self.user = TWITTER['user']
 
         self.tweet_mode = 'extended'
-        self.wait_on_rate_limit = 'wait_on_rate_limit'
         self.count_per_page = 200
         self.max_page = 100
 

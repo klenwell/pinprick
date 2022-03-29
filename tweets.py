@@ -9,6 +9,7 @@ import random
 from datetime import date
 
 from services.tweet_service import TweetService
+from mailers.daily_tweet_mailer import DailyTweetMailer
 
 
 #
@@ -29,15 +30,12 @@ To send email:
 
 # Usage: python tweets.py daily_mailer <user>@example.com
 def daily_mailer(args):
-    dated = date.today()
-
-    api = TweetService()
-    daily_faves = api.faves_by_date(dated)
-    random_faves = api.faves_sharded_sample(5)
-    print([(f.created_at, f.full_text) for f in random_faves])
-
-    breakpoint()
-
+    recipient = args[1]
+    mailer = DailyTweetMailer()
+    mailer.deliver_to(recipient)
+    print('Daily tweet mailer delivered to {}'.format(recipient))
+    return "Done"
+    
 
 # Usage: python tweets.py interactive
 def interactive():
