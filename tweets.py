@@ -2,7 +2,7 @@
 Collect favorites from Twitter account.
 
 USAGE:
-    python main.py usage
+    python tweets.py usage
 """
 import sys
 import random
@@ -33,7 +33,7 @@ def daily_mailer(args):
     mailer = DailyTweetMailer()
     mailer.deliver_to(recipient)
     print('Daily tweet mailer delivered to {}'.format(recipient))
-    return "Done"
+    return True
 
 
 # Usage: python tweets.py interactive

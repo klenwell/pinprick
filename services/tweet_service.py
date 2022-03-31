@@ -14,17 +14,6 @@ from services.bookmark_service import shard_list
 
 
 #
-# Constants
-#
-BASE_SERVICE_URL = 'https://pinboard.in'
-
-
-#
-# Module Methods
-#
-
-
-#
 # Service Class
 #
 class TweetService:
