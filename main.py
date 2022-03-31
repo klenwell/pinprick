@@ -64,7 +64,7 @@ def interactive():
     subject = 'Test Email Using Gmail API'
     body = 'This is a test of the Gmail API using OAuth at {}'.format(datetime.now())
 
-    mailer = GmailApiMailer(subject=subject, body=body)
+    mailer = GmailSmtpMailer(subject=subject, body=body)
     message = mailer.deliver_to(recipient)
     print('Message Id: {} sent to {}'.format(message['id'], recipient))
 
