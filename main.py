@@ -6,10 +6,14 @@ USAGE:
 """
 import sys
 import random
+from datetime import datetime, timedelta, timezone
+import tweepy
 
 from services.bookmark_service import BookmarkService
+from services.tweet_service import TweetService
 from mailers.daily_mailer import DailyMailer
 from mailers.gmail_smtp_mailer import GmailSmtpMailer
+from config.secrets import TIMELINE
 
 
 #
@@ -53,21 +57,74 @@ def music_mailer(args):
     print('Message delivered to {}'.format(recipient))
 
 
+# Usage: python main.py timeline <hours_ago> <email>
+def timeline(args):
+    hours = args[1]
+    recipient = args[2]
+    start_at = datetime.now(timezone.utc) - timedelta(hours=hours)
+
+    timeline = Timeline()
+    tweets = timeline.fetch_since(start_at)
+
+    mailer = TimelineMailer(tweets)
+    mailer.deliver_to(recipient)
+    print('Message delivered to {}'.format(recipient))
+    return "Done"
+
+
 # Usage: python main.py interactive
 def interactive():
-    # pinboard = BookmarkService()
-    # print(len(pinboard.bookmarks))
-    from datetime import datetime
-    from config.secrets import GMAIL
+    consumer_key = TIMELINE['staging-key']
+    consumer_secret = TIMELINE['staging-key-secret']
+    access_token = TIMELINE['staging-access-token']
+    access_token_secret = TIMELINE['staging-access-token-secret']
 
-    recipient = '{}@gmail.com'.format(GMAIL['address'])
-    subject = 'Test Email Using Gmail API'
-    body = 'This is a test of the Gmail API using OAuth at {}'.format(datetime.now())
+    # API v1
+    # https://docs.tweepy.org/en/stable/examples.html
+    auth = tweepy.OAuth1UserHandler(
+        consumer_key, consumer_secret, access_token, access_token_secret
+    )
+    api = tweepy.API(auth)
 
-    mailer = GmailSmtpMailer(subject=subject, body=body)
-    message = mailer.deliver_to(recipient)
-    print('Message Id: {} sent to {}'.format(message['id'], recipient))
+    # If the authentication was successful, this should print the
+    # screen name / username of the account
+    print(api.verify_credentials().screen_name)
+    tweets = api.home_timeline()
+    breakpoint()
 
+    # API v2
+    # https://docs.tweepy.org/en/stable/examples.html
+    client = tweepy.Client(
+        consumer_key=consumer_key, consumer_secret=consumer_secret,
+        access_token=access_token, access_token_secret=access_token_secret
+    )
+
+    tweet_fields = ['id', 'author_id', 'text', 'created_at', 'context_annotations']
+    expansions = ['author_id']
+
+    # Notice timezone
+    start_time = datetime.now(timezone.utc) - timedelta(hours=1)
+
+    all_tweets = []
+    all_users = []
+
+    for response in tweepy.Paginator(
+        client.get_home_timeline,
+        max_results=100,
+        tweet_fields=tweet_fields,
+        expansions=expansions,
+        start_time=start_time,
+        limit=3
+    ):
+        tweets = response.data
+        users = response.includes['users']
+        print('twitter request', len(tweets), len(users))
+
+        all_tweets += tweets
+        all_users += users
+
+    print(len(all_tweets))
+    print(len(all_users))
     breakpoint()
 
 
@@ -86,6 +143,8 @@ def controller():
         daily_mailer(args)
     elif command == 'music_mailer':
         music_mailer(args)
+    elif command == 'timeline':
+        timeline(args)
     else:
         usage()
 
