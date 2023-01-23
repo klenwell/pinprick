@@ -5,9 +5,7 @@ Uses Twitter API. For more information, see:
 
 https://developer.twitter.com/
 """
-from functools import cached_property
 import tweepy
-
 from config.secrets import TIMELINE
 
 

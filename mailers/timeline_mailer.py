@@ -1,4 +1,3 @@
-from datetime import datetime
 from mailers.gmail_smtp_mailer import GmailSmtpMailer
 
 
@@ -8,9 +7,6 @@ class TimelineMailer(GmailSmtpMailer):
         body = self.compose_body(tweets)
         super().__init__(subject=subject, body=body)
 
-    #
-    # Instance Methods
-    #
     def compose_body(self, tweets):
         email_f = """
 <h2>Latest Timeline</h2>
