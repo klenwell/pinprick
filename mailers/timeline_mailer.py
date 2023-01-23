@@ -17,8 +17,11 @@ class TimelineMailer(GmailSmtpMailer):
 {}
 """
 
-        start_at = tweets[-1].timestamp
-        end_at = tweets[0].timestamp
+        # Sort in ASC order by timestamp (basically reverse order)
+        tweets = sorted(tweets, key=lambda t: t.created_at)
+
+        start_at = tweets[0].timestamp
+        end_at = tweets[-1].timestamp
         user_count = len(set([t.by for t in tweets]))
         tweet_list = self.format_tweets(tweets)
         return email_f.format(start_at, end_at, len(tweets), user_count, tweet_list)
