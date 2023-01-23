@@ -6,7 +6,7 @@ from services.tweet_service import TweetService
 
 class DailyTweetMailer(GmailSmtpMailer):
     def __init__(self):
-        subject = 'Pinprick Daily Mailer'
+        subject = 'Pinprick Daily Tweet Mailer'
         body = self.compose_body()
         super().__init__(subject=subject, body=body)
 

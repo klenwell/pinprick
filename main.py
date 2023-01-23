@@ -57,22 +57,6 @@ def music_mailer(args):
     print('Message delivered to {}'.format(recipient))
 
 
-# Usage: python main.py timeline <hours_ago> <email>
-def timeline(args):
-    hours = args[1]
-    recipient = args[2]
-    minutes = (hours * 60) + 5
-    start_at = datetime.now(timezone.utc) - timedelta(minutes=minutes)
-
-    timeline = Timeline()
-    tweets = timeline.fetch_since(start_at)
-
-    mailer = TimelineMailer(tweets)
-    mailer.deliver_to(recipient)
-    print('Message delivered to {}'.format(recipient))
-    return "Done"
-
-
 # Usage: python main.py interactive
 def interactive():
     from models.timeline import Timeline
@@ -148,8 +132,6 @@ def controller():
         daily_mailer(args)
     elif command == 'music_mailer':
         music_mailer(args)
-    elif command == 'timeline':
-        timeline(args)
     else:
         usage()
 

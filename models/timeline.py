@@ -41,9 +41,15 @@ class Timeline:
         for response in tweepy.Paginator(self.client.get_home_timeline, **cursor_params):
             pages += 1
             paged_tweets = response.data
-            paged_users = response.includes['users']
-            v2_tweets += paged_tweets
-            v2_users += paged_users
+            paged_users = response.includes.get('users')
+
+            if paged_tweets:
+                v2_tweets += paged_tweets
+
+            if paged_users:
+                v2_users += paged_users
+
+            print(f"Fetched page {pages}")
 
         return self.match_users_to_tweets(v2_tweets, v2_users)
 
@@ -89,6 +95,10 @@ class TimelineTweet:
     @property
     def created_at(self):
         return self.tweet.created_at.astimezone()
+
+    @property
+    def timestamp(self):
+        return str(self.created_at)[:16]
 
     @property
     def by(self):

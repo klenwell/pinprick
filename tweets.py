@@ -6,9 +6,12 @@ USAGE:
 """
 import sys
 import random
+from datetime import datetime, timedelta, timezone
 
 from services.tweet_service import TweetService
+from models.timeline import Timeline
 from mailers.daily_tweet_mailer import DailyTweetMailer
+from mailers.timeline_mailer import TimelineMailer
 
 
 #
@@ -33,6 +36,22 @@ def daily_mailer(args):
     mailer = DailyTweetMailer()
     mailer.deliver_to(recipient)
     print('Daily tweet mailer delivered to {}'.format(recipient))
+    return True
+
+
+# Usage: python main.py timeline <hours_ago> <email>
+def timeline(args):
+    hours = int(args[1])
+    recipient = args[2]
+    minutes = (hours * 60) + 5
+    start_at = datetime.now(timezone.utc) - timedelta(minutes=minutes)
+
+    timeline = Timeline()
+    tweets = timeline.fetch_since(start_at)
+
+    mailer = TimelineMailer(tweets)
+    mailer.deliver_to(recipient)
+    print('Message delivered to {}'.format(recipient))
     return True
 
 
@@ -74,6 +93,8 @@ def controller():
         interactive()
     elif command == 'daily_mailer':
         daily_mailer(args)
+    elif command == 'timeline':
+        timeline(args)
     else:
         usage()
 
