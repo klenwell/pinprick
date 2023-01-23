@@ -61,7 +61,8 @@ def music_mailer(args):
 def timeline(args):
     hours = args[1]
     recipient = args[2]
-    start_at = datetime.now(timezone.utc) - timedelta(hours=hours)
+    minutes = (hours * 60) + 5
+    start_at = datetime.now(timezone.utc) - timedelta(minutes=minutes)
 
     timeline = Timeline()
     tweets = timeline.fetch_since(start_at)
@@ -74,23 +75,26 @@ def timeline(args):
 
 # Usage: python main.py interactive
 def interactive():
-    consumer_key = TIMELINE['staging-key']
-    consumer_secret = TIMELINE['staging-key-secret']
-    access_token = TIMELINE['staging-access-token']
-    access_token_secret = TIMELINE['staging-access-token-secret']
+    from models.timeline import Timeline
+
+    start_at = datetime.now(timezone.utc) - timedelta(minutes=60)
+
+    timeline = Timeline()
+    tweets = timeline.fetch_since(start_at)
+    breakpoint()
 
     # API v1
     # https://docs.tweepy.org/en/stable/examples.html
-    auth = tweepy.OAuth1UserHandler(
-        consumer_key, consumer_secret, access_token, access_token_secret
-    )
-    api = tweepy.API(auth)
-
-    # If the authentication was successful, this should print the
-    # screen name / username of the account
-    print(api.verify_credentials().screen_name)
-    tweets = api.home_timeline()
-    breakpoint()
+    # auth = tweepy.OAuth1UserHandler(
+    #     consumer_key, consumer_secret, access_token, access_token_secret
+    # )
+    # api = tweepy.API(auth)
+    #
+    # # If the authentication was successful, this should print the
+    # # screen name / username of the account
+    # print(api.verify_credentials().screen_name)
+    # tweets = api.home_timeline()
+    # breakpoint()
 
     # API v2
     # https://docs.tweepy.org/en/stable/examples.html
@@ -122,6 +126,7 @@ def interactive():
 
         all_tweets += tweets
         all_users += users
+        breakpoint()
 
     print(len(all_tweets))
     print(len(all_users))
