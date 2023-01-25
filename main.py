@@ -6,6 +6,7 @@ USAGE:
 """
 import sys
 import random
+from datetime import datetime, timedelta, timezone
 
 from services.bookmark_service import BookmarkService
 from mailers.daily_mailer import DailyMailer
@@ -55,19 +56,13 @@ def music_mailer(args):
 
 # Usage: python main.py interactive
 def interactive():
-    # pinboard = BookmarkService()
-    # print(len(pinboard.bookmarks))
-    from datetime import datetime
-    from config.secrets import GMAIL
+    from models.timeline import Timeline
 
-    recipient = '{}@gmail.com'.format(GMAIL['address'])
-    subject = 'Test Email Using Gmail API'
-    body = 'This is a test of the Gmail API using OAuth at {}'.format(datetime.now())
+    start_at = datetime.now(timezone.utc) - timedelta(minutes=60)
 
-    mailer = GmailSmtpMailer(subject=subject, body=body)
-    message = mailer.deliver_to(recipient)
-    print('Message Id: {} sent to {}'.format(message['id'], recipient))
-
+    timeline = Timeline()
+    tweets = timeline.fetch_since(start_at)
+    print(len(tweets))
     breakpoint()
 
 

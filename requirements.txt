@@ -12,4 +12,4 @@ google-auth-httplib2
 google-auth-oauthlib
 
 # Twitter API: https://github.com/tweepy/tweepy
-tweepy
+tweepy>=4.12.1
