@@ -1,9 +1,10 @@
+from datetime import datetime
 from mailers.gmail_smtp_mailer import GmailSmtpMailer
 
 
 class TimelineMailer(GmailSmtpMailer):
     def __init__(self, tweets):
-        subject = 'Twitter Timeline Mailer'
+        subject = f"Twitter Timeline Mailer • {datetime.now().strftime('%Y-%m-%d')}"
         body = self.compose_body(tweets)
         super().__init__(subject=subject, body=body)
 
