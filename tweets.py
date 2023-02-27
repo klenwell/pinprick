@@ -43,7 +43,7 @@ def daily_mailer(args):
 def timeline(args):
     hours = int(args[1])
     recipient = args[2]
-    minutes = (hours * 60) + 5
+    minutes = hours * 60
     start_at = datetime.now(timezone.utc) - timedelta(minutes=minutes)
 
     timeline = Timeline()
